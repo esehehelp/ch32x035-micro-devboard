@@ -33,7 +33,7 @@ def _flash(wchisp, firmware):
         import serial
         print("Triggering BootROM via 1200bps touch on %s" % port)
         serial.Serial(port, 1200).close()
-        time.sleep(2.0)
+        time.sleep(6.0)
     else:
         print("CDC port not found -- trying wchisp directly")
 

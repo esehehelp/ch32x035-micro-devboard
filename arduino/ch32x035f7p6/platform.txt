@@ -1,0 +1,74 @@
+name=CH32X035F7P6 Boards
+version=0.1.0
+
+# Compiler (reuse WCH-installed RISC-V toolchain)
+compiler.path={runtime.tools.riscv-none-embed-gcc.path}/bin/
+compiler.c.cmd=riscv-none-embed-gcc
+compiler.cpp.cmd=riscv-none-embed-g++
+compiler.ar.cmd=riscv-none-embed-ar
+compiler.objcopy.cmd=riscv-none-embed-objcopy
+compiler.size.cmd=riscv-none-embed-size
+compiler.elf2hex.cmd=riscv-none-embed-objcopy
+
+# Common flags
+compiler.warning_flags=-w
+compiler.warning_flags.none=-w
+compiler.warning_flags.default=
+compiler.warning_flags.more=-Wall
+compiler.warning_flags.all=-Wall -Wextra
+
+compiler.warning_level=none
+compiler.common_flags=-march={build.march} -mabi={build.mabi} -msmall-data-limit=8 -msave-restore -mno-relax -Os -ffunction-sections -fdata-sections -fno-common {compiler.warning_flags}
+
+# C compiler
+compiler.c.flags={compiler.common_flags} -std=gnu99 -MMD
+compiler.c.extra_flags=-DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board}
+
+# C++ compiler
+compiler.cpp.flags={compiler.common_flags} -std=gnu++14 -fno-threadsafe-statics -fno-rtti -fno-exceptions -MMD
+compiler.cpp.extra_flags=-DF_CPU={build.f_cpu} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board}
+
+# Assembler
+compiler.S.flags=-march={build.march} -mabi={build.mabi} -x assembler-with-cpp -MMD
+compiler.S.extra_flags=-DF_CPU={build.f_cpu}
+
+# Archiver
+compiler.ar.flags=rcs
+
+# Linker
+compiler.ldflags=-march={build.march} -mabi={build.mabi} -mno-relax -nostartfiles -Xlinker --gc-sections -Wl,--no-relax --specs=nano.specs --specs=nosys.specs -lc -lm
+
+# Preprocessor (needed by Arduino CLI for library detection and prototype generation)
+preproc.includes.flags=-w -x c++ -E -CC
+preproc.macros.flags=-w -x c++ -E -CC
+recipe.preproc.includes="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.cpp.extra_flags} {preproc.includes.flags} "-I{build.system.path}" "-I{build.core.path}" "-I{build.variant.path}" {includes} "{source_file}" -o "{preprocessed_file_path}"
+recipe.preproc.macros="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.cpp.extra_flags} {preproc.macros.flags} "-I{build.system.path}" "-I{build.core.path}" "-I{build.variant.path}" {includes} "{source_file}" -o "{preprocessed_file_path}"
+
+# Compile patterns
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} {compiler.c.extra_flags} "-I{build.system.path}" "-I{build.core.path}" "-I{build.variant.path}" {includes} -c "{source_file}" -o "{object_file}"
+
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} {compiler.cpp.extra_flags} "-I{build.system.path}" "-I{build.core.path}" "-I{build.variant.path}" {includes} -c "{source_file}" -o "{object_file}"
+
+recipe.S.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.S.flags} {compiler.S.extra_flags} "-I{build.system.path}" "-I{build.core.path}" "-I{build.variant.path}" {includes} -c "{source_file}" -o "{object_file}"
+
+# Archive
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{archive_file_path}" "{object_file}"
+
+# Link
+recipe.c.combine.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.ldflags} "-T{build.system.path}/{build.ldscript}" "-L{build.path}" -o "{build.path}/{build.project_name}.elf" {object_files} -Wl,--whole-archive "{build.path}/{archive_file}" -Wl,--no-whole-archive -lc -lm
+
+# Binary
+recipe.objcopy.bin.pattern="{compiler.path}{compiler.objcopy.cmd}" -O binary "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
+recipe.objcopy.hex.pattern="{compiler.path}{compiler.objcopy.cmd}" -O ihex "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
+
+# Size
+recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
+recipe.size.regex=^(?:\.text|\.data|\.rodata)\s+(\d+).*
+recipe.size.regex.data=^(?:\.data|\.bss)\s+(\d+).*
+
+# Upload via 1200bps touch + wchisp
+tools.ch32_1k2touch.cmd=python3
+tools.ch32_1k2touch.cmd.windows=python.exe
+tools.ch32_1k2touch.upload.params.verbose=
+tools.ch32_1k2touch.upload.params.quiet=
+tools.ch32_1k2touch.upload.pattern="{cmd}" "{runtime.platform.path}/tools/ch32_upload.py" "{serial.port}" "{build.path}/{build.project_name}.bin"

@@ -216,7 +216,7 @@ void ch32x_cdc_reboot_to_bootrom(void) {
 /* ══════════════════════════════════════════════════════════════
  *  USBFS IRQ Handler
  * ══════════════════════════════════════════════════════════════ */
-void USBFS_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+void USBFS_IRQHandler(void) __attribute__((interrupt));
 
 void USBFS_IRQHandler(void) {
     uint8_t intflag = USBFSD->INT_FG;
