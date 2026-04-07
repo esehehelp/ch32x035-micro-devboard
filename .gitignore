@@ -1,0 +1,8 @@
+# KiCad backup and history
+*.kicad_prl
+*-backups/
+.history/
+fp-info-cache
+
+# Claude Code
+.claude/

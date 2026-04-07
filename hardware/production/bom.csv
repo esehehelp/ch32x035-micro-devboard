@@ -1,0 +1,12 @@
+﻿Designator,Footprint,Quantity,Value,LCSC Part #
+"C1, C2",0603,2,10u/35V,
+C3,0603,1,0.1u/50V,
+D1,0603,1,Red_LED,
+J1,USB-C_16-HandSolder,1,USB_C_Receptacle,
+"J2, J3",PinHeader_1x09_P2.54mm_Vertical,2,Pinheader_P2.54_9P,
+"R1, R2, R5",0603,3,5k1,
+"R3, R4",0603,2,22,
+R6,0603,1,1k,
+"SW1, SW2",SW_SPST_EVPAW,2,EVPAWCD40,
+U1,TSSOP-20_4.4x6.5mm_P0.65mm,1,CH32X035F7P6,
+U2,SOT-89-3,1,NJM78L33SU3,
