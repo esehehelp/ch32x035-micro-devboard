@@ -94,13 +94,10 @@ void ch32x_cdc_on_rx(const uint8_t *buf, size_t len) {
 #include "ch32x_cdc.h"
 
 int main(void) {
-    RCC->CTLR |= 1;
-    FLASH->ACTLR = (FLASH->ACTLR & ~0x03) | 0x02;
+    ch32x_cdc_init(NULL);  // clock setup + USB CDC (default: 1200bps reboot enabled)
+
     RCC->APB2PCENR |= RCC_APB2Periph_GPIOC;
     GPIOC->CFGLR = (GPIOC->CFGLR & ~(0xFu << 12)) | (0x3u << 12);
-
-    ch32x_cdc_config_t cfg = { .magic_baud_enable = 1 };
-    ch32x_cdc_init(&cfg);
 
     uint32_t tick = 0;
     for (;;) {

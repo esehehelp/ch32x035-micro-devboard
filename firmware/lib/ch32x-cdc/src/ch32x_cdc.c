@@ -494,6 +494,10 @@ void ch32x_cdc_init(const ch32x_cdc_config_t *cfg) {
         pre_reboot_hook = cfg->pre_reboot;
     }
 
+    /* System clock: HSI on, 2 wait-states for 48 MHz */
+    RCC->CTLR |= 1;
+    FLASH->ACTLR = (FLASH->ACTLR & ~0x03) | 0x02;
+
     build_serial();
 
     /* Enable clocks */
