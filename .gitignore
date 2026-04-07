@@ -4,5 +4,8 @@
 .history/
 fp-info-cache
 
+# PlatformIO
+.pio/
+
 # Claude Code
 .claude/

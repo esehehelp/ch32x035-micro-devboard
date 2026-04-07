@@ -1,0 +1,8 @@
+{
+    "name": "ch32x-cdc",
+    "version": "0.1.0",
+    "description": "USB CDC-ACM library for CH32X035 with 1200bps BootROM trigger",
+    "license": "MIT",
+    "frameworks": "*",
+    "platforms": "ch32v"
+}
