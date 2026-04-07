@@ -99,7 +99,7 @@ typedef struct {
 /* AFIO_CTLR bits */
 #define AFIO_CTLR_UDM_PUE        0x03U   /* PC16/UDM pull-up mode */
 #define AFIO_CTLR_UDP_PUE        0x0CU   /* PC17/UDP pull-up mode */
-#define AFIO_CTLR_UDP_PUE_1K5    0x04U   /* 1.5k pull-up on UDP (full-speed) */
+#define AFIO_CTLR_UDP_PUE_1K5    0x0CU   /* 1.5k pull-up on UDP (full-speed) */
 #define AFIO_CTLR_USB_PHY_V33    0x40U   /* USB PHY 3.3V mode */
 #define AFIO_CTLR_USB_IOEN       0x80U   /* USB I/O enable */
 
@@ -213,6 +213,9 @@ typedef struct {
 #define USBFS_UC_RESET_SIE    0x04
 #define USBFS_UC_INT_BUSY     0x08
 #define USBFS_UC_DEV_PU_EN    0x20
+
+/* DEV_ADDR bits */
+#define USBFS_UDA_GP_BIT      0x80
 
 /* UDEV_CTRL bits */
 #define USBFS_UD_PORT_EN      0x01
